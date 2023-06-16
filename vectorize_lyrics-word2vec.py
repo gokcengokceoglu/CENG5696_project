@@ -52,15 +52,15 @@ def get_dataset(query_file, lyrics_file):
     for elm in query_data:
         query = elm['query']
         word_tokens = word_tokenize(query)
-        filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-        filtered_sentence = [ps.stem(w) for w in filtered_sentence]
-        sentences.append(filtered_sentence)
+        # filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+        # filtered_sentence = [ps.stem(w) for w in filtered_sentence]
+        sentences.append(word_tokens)
     for elm in lyric_data:
         lyric = elm['lyrics']
         word_tokens = word_tokenize(lyric)
-        filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-        filtered_sentence = [ps.stem(w) for w in filtered_sentence]
-        sentences.append(filtered_sentence)
+        # filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+        # filtered_sentence = [ps.stem(w) for w in filtered_sentence]
+        sentences.append(word_tokens)
     return sentences
 
 
@@ -117,9 +117,9 @@ def get_song_vectors(model, lyrics_file, vector_size = 100):
         lyric = elm['lyrics']
         title = elm['title']
         word_tokens = word_tokenize(lyric)
-        filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-        filtered_sentence = [ps.stem(w) for w in filtered_sentence]
-        for word in filtered_sentence:
+        # filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+        # filtered_sentence = [ps.stem(w) for w in filtered_sentence]
+        for word in word_tokens:
             vect = model.wv.get_vector(word)
             song_vector += vect
             num_words += 1
@@ -142,9 +142,9 @@ def rank_songs(model, query, vector_size=100):
     num_words = 0
     query_vector = np.zeros((vector_size,))
     word_tokens = word_tokenize(query)
-    filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-    filtered_sentence = [ps.stem(w) for w in filtered_sentence]
-    for word in filtered_sentence:
+    # filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+    # filtered_sentence = [ps.stem(w) for w in filtered_sentence]
+    for word in word_tokens:
         vect = model.wv.get_vector(word)
         query_vector += vect
         num_words += 1
@@ -166,10 +166,14 @@ def test(query_file,model):
     query_data = json.load(f_query)
     correct_cls = 0
     false_cls = 0
+    similarities = []
     for elm in query_data:
+        sim_per_query = []
         query = elm['query']
         song = elm['song']
+        sim_per_query.append(query)
         ranked_songs = rank_songs(model, query, vector_size=300)
+        sim_per_query.append(ranked_songs)
         song_names_ranked = [s[0] for s in ranked_songs]
         try:
             print(song_names_ranked.index(song))
@@ -185,9 +189,11 @@ def test(query_file,model):
             if (results_song[0] == song):
                 correct_cls += 1
         false_cls += 1
+        similarities.append(sim_per_query)
     print(correct_cls)
     print(false_cls)
     file1.close()
+    np.save("similarities", similarities)
 
 
 query_file = "queries.json"
