@@ -21,6 +21,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import tqdm
+import string
+
 ps = PorterStemmer()
 
 nltk.download('stopwords')
@@ -67,11 +69,11 @@ def get_dataset(query_file, lyrics_file):
 def train_word2vec(words, model_type="skipgram", vector_size = 100, window = 5, epochs = 10):
 
     if (model_type == "skipgram"):
-         model = gensim.models.Word2Vec(words, min_count = 1, vector_size = 100,
-                                            window = 5, sg = 1, callbacks=[callback()])
+         model = gensim.models.Word2Vec(words, min_count = 1, vector_size = vector_size,
+                                            window = window, sg = 1, callbacks=[callback()])
     else: # Train C-BOW Model
         model = gensim.models.Word2Vec(words, min_count = 1,
-                                        vector_size = 100, window = 5, epochs=epochs, callbacks=[callback()])
+                                        vector_size = vector_size, window = window, epochs=epochs, callbacks=[callback()])
     return model
     
   
@@ -104,6 +106,7 @@ def visualize_wordmap(model):
 
     plt.show()
 
+
 def get_song_vectors(model, lyrics_file, vector_size = 100):
     song_word2vec_embeddings = []
     f_lyric = open(lyrics_file)
@@ -121,6 +124,7 @@ def get_song_vectors(model, lyrics_file, vector_size = 100):
             song_vector += vect
             num_words += 1
         mean_vector = song_vector / num_words
+        title = title.translate(str.maketrans('', '', string.punctuation)).lower()
         song_word2vec_embeddings.append([title, list(mean_vector)])
     with open("song_word2vec_embeddings.json", "w") as fp:
         json.dump(song_word2vec_embeddings, fp)
@@ -157,18 +161,32 @@ def rank_songs(model, query, vector_size=100):
     return ranked_songs
 
 def test(query_file,model):
-    file1 = open("myfile.txt","w+")
+    file1 = open("test_results.txt","w+")
     f_query = open(query_file)
     query_data = json.load(f_query)
+    correct_cls = 0
+    false_cls = 0
     for elm in query_data:
         query = elm['query']
         song = elm['song']
-        ranked_songs = rank_songs(model, query, vector_size=100)
-        first_songs = ranked_songs[-5:-1]
+        ranked_songs = rank_songs(model, query, vector_size=300)
+        song_names_ranked = [s[0] for s in ranked_songs]
+        try:
+            print(song_names_ranked.index(song))
+        except:
+            print(song + " does not exist!!")
+            false_cls = false_cls -1
+        first_songs = ranked_songs[-15:-1]
         file1.write(str(song) + "\n")
         for f in first_songs:
             file1.write(str(f) + "\n")
-            file1.write("-------------------\n")
+        file1.write("-------------------\n")
+        for results_song in first_songs:
+            if (results_song[0] == song):
+                correct_cls += 1
+        false_cls += 1
+    print(correct_cls)
+    print(false_cls)
     file1.close()
 
 
@@ -176,7 +194,7 @@ query_file = "queries.json"
 lyrics_file = "lyrics.json"
 
 ds = get_dataset(query_file, lyrics_file)
-model = train_word2vec(ds, model_type="skipgram", vector_size = 100, window = 5, epochs = 10)
-get_song_vectors(model, lyrics_file, vector_size = 100)
+model = train_word2vec(ds, vector_size = 300, window = 3, epochs = 10)
+get_song_vectors(model, lyrics_file, vector_size = 300)
 test(query_file, model)
 #visualize_wordmap(model)
