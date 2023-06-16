@@ -64,8 +64,8 @@ class InvertedIndex:
         terms = clean_text.split(' ')
         appearances_dict = dict()  # Dictionary with each term and the frequency it appears in the text.
         for term in terms:
-            term_frequency = appearances_dict[term].frequency if term in appearances_dict else 0
-            appearances_dict[term] = Appearance(document['genius_track_id'], term_frequency + 1)
+            term_frequency = appearances_dict[term]['frequency'] if term in appearances_dict else 0
+            appearances_dict[term] = Appearance(document['genius_track_id'], term_frequency + 1).__dict__
 
         # Update the inverted index
         update_dict = {key: [appearance]
@@ -107,8 +107,8 @@ def main():
     for term in result.keys():
         for appearance in result[term]:
             # Belgium: { docId: 1, frequency: 1}
-            document = db.get(appearance.docId)
-            print(highlight_term(appearance.docId, term, document['lyrics']))
+            document = db.get(appearance['docId'])
+            print(highlight_term(appearance['docId'], term, document['lyrics']))
         print("-----------------------------")
 
 
