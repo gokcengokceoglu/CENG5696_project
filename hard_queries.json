@@ -20,9 +20,19 @@
         "singer": "ABBA"
     },
     {
+        "query": "There is a bathroom on the right",
+        "song": "Bad Moon Rising",
+        "singer": "Creedence Clearwater Revival"
+    },
+    {
         "query": "Sweet dreams are made of these",
         "song": "Sweet Dreams (Are Made of This)",
         "singer": "Eurythmics"
+    },
+    {
+        "query": "Here we are now in containers",
+        "song": "Smells Like Teen Spirit",
+        "singer": "Nirvana"
     },
     {
         "query": "Kicking your cat all over the place",
@@ -30,14 +40,34 @@
         "singer": "Queen"
     },
     {
+        "query": "hold me tighter than my very own jeans",
+        "song": "Single Ladies",
+        "singer": " Beyonce"
+    },
+    {
         "query": "Like a birthday or a preview",
         "song": "Rio",
         "singer": "Duran Duran"
     },
     {
+        "query": "I can see clearly now lorraine is gone",
+        "song": "I Can See Clearly Now",
+        "singer": "Johnny Nash"
+    },
+    {
         "query": "Youve been outright offensive for so long now",
         "song": "Desperado",
         "singer": "The Eagles"
+    },
+    {
+        "query": "i get high",
+        "song": "I Want to Hold Your Hand",
+        "singer": "The Beatles"
+    },
+    {
+        "query": "Dont bring me down Bruce",
+        "song": "Dont Bring Me Down",
+        "singer": "Electric Light Orchestra"
     },
     {
         "query": "Shall we dont like it Lock the taskbar lock the taskbar",
@@ -55,6 +85,11 @@
         "singer": "KISS"
     },
     {
+        "query": "and when we done I make him buy me lo mein",
+        "song": "Anaconda",
+        "singer": "Nicki Minaj"
+    },
+    {
         "query": "It doesnt make a difference if were naked or not",
         "song": "Livin on a Prayer",
         "singer": "Bon Jovi"
@@ -70,8 +105,13 @@
         "singer": "Madonna"
     },
     {
+        "query": "Slam your body down the wine is all around",
+        "song": "Wannabe",
+        "singer": "Spice Girls"
+    },
+    {
         "query": "No docks or chasms in the classroom",
         "song": "Another Brick in the Wall",
         "singer": "Pink Floyd"
-    }
+    },
 ]
